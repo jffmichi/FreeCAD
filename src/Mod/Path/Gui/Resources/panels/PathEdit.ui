@@ -7,14 +7,14 @@
     <x>0</x>
     <y>0</y>
     <width>581</width>
-    <height>785</height>
+    <height>796</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Job Edit</string>
   </property>
   <property name="currentIndex">
-   <number>1</number>
+   <number>0</number>
   </property>
   <widget class="QWidget" name="tabGeneral">
    <attribute name="title">
@@ -31,8 +31,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>561</width>
-         <height>675</height>
+         <width>559</width>
+         <height>685</height>
         </rect>
        </property>
        <attribute name="label">
@@ -110,8 +110,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>98</width>
-         <height>28</height>
+         <width>559</width>
+         <height>685</height>
         </rect>
        </property>
        <attribute name="label">
@@ -161,7 +161,7 @@ if %S is included, you can specify where the number occurs.  Without it, the num
 %S ... Sequence Number
 
 The following example store all files with the same name as the document the directory /home/freecad (please remove quotes):
-"/home/cnc/%d.g-code"
+&quot;/home/cnc/%d.g-code&quot;
 See the file save policy below on how to deal with name conflicts.</string>
       </property>
      </widget>
@@ -442,9 +442,9 @@ If &lt;span style=&quot; font-style:italic;&quot;&gt;order by&lt;/span&gt; is se
        <property name="geometry">
         <rect>
          <x>0</x>
-         <y>0</y>
-         <width>548</width>
-         <height>929</height>
+         <y>-375</y>
+         <width>545</width>
+         <height>1060</height>
         </rect>
        </property>
        <attribute name="label">
@@ -925,6 +925,29 @@ If &lt;span style=&quot; font-style:italic;&quot;&gt;order by&lt;/span&gt; is se
              </property>
             </widget>
            </item>
+           <item row="0" column="2">
+            <widget class="QPushButton" name="modelRotateRight">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="MinimumExpanding">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="icon">
+              <iconset resource="../Path.qrc">
+               <normaloff>:/icons/arrow-cw.svg</normaloff>:/icons/arrow-cw.svg</iconset>
+             </property>
+             <property name="iconSize">
+              <size>
+               <width>32</width>
+               <height>32</height>
+              </size>
+             </property>
+            </widget>
+           </item>
            <item row="0" column="1">
             <layout class="QVBoxLayout" name="verticalLayout_18">
              <property name="leftMargin">
@@ -964,26 +987,69 @@ If &lt;span style=&quot; font-style:italic;&quot;&gt;order by&lt;/span&gt; is se
              </item>
             </layout>
            </item>
-           <item row="0" column="2">
-            <widget class="QPushButton" name="modelRotateRight">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Minimum" vsizetype="MinimumExpanding">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="modelNestGroup">
+          <property name="title">
+           <string>Nest - XY</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_7">
+           <item row="1" column="0">
+            <widget class="QLabel" name="label_16">
              <property name="text">
-              <string/>
+              <string>Direction Y</string>
              </property>
-             <property name="icon">
-              <iconset resource="../Path.qrc">
-               <normaloff>:/icons/arrow-cw.svg</normaloff>:/icons/arrow-cw.svg</iconset>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_5">
+             <property name="text">
+              <string>Direction X:</string>
              </property>
-             <property name="iconSize">
-              <size>
-               <width>32</width>
-               <height>32</height>
-              </size>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QDoubleSpinBox" name="modelNestDirectionX">
+             <property name="minimum">
+              <double>-1.000000000000000</double>
+             </property>
+             <property name="maximum">
+              <double>1.000000000000000</double>
+             </property>
+             <property name="singleStep">
+              <double>0.100000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="2">
+            <widget class="QCheckBox" name="modelNestRotate">
+             <property name="text">
+              <string>Rotate</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="2">
+            <widget class="QPushButton" name="modelNest">
+             <property name="text">
+              <string>Nest</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QDoubleSpinBox" name="modelNestDirectionY">
+             <property name="minimum">
+              <double>-1.000000000000000</double>
+             </property>
+             <property name="maximum">
+              <double>1.000000000000000</double>
+             </property>
+             <property name="singleStep">
+              <double>0.100000000000000</double>
+             </property>
+             <property name="value">
+              <double>-1.000000000000000</double>
              </property>
             </widget>
            </item>
@@ -1010,8 +1076,8 @@ If &lt;span style=&quot; font-style:italic;&quot;&gt;order by&lt;/span&gt; is se
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>252</width>
-         <height>354</height>
+         <width>559</width>
+         <height>685</height>
         </rect>
        </property>
        <attribute name="label">
@@ -1113,12 +1179,12 @@ Default: OpToolDiameter</string>
              <property name="toolTip">
               <string>Expression set as ClearanceHeight for new operations.
 
-Default: "OpStockZMax+SetupSheet.ClearanceHeightOffset"</string>
+Default: &quot;OpStockZMax+SetupSheet.ClearanceHeightOffset&quot;</string>
              </property>
             </widget>
            </item>
            <item row="1" column="3">
-            <widget class="Gui::QuantitySpinBox" name="setupClearanceHeightOffs">
+            <widget class="Gui::QuantitySpinBox" name="setupClearanceHeightOffs" native="true">
              <property name="toolTip">
               <string>ClearanceHeightOffset - can be used by expressions to set the default ClearanceHeight for new operations.
 
@@ -1138,16 +1204,16 @@ Default: 3 mm</string>
              <property name="toolTip">
               <string>Expression set as SafeHeight for new operations.
 
-Default: "OpStockZMax+SetupSheet.SafeHeightOffset"</string>
+Default: &quot;OpStockZMax+SetupSheet.SafeHeightOffset&quot;</string>
              </property>
             </widget>
            </item>
            <item row="3" column="3">
-            <widget class="Gui::QuantitySpinBox" name="setupSafeHeightOffs">
+            <widget class="Gui::QuantitySpinBox" name="setupSafeHeightOffs" native="true">
              <property name="toolTip">
               <string>SafeHeightOffset can be for expressions to set the SafeHeight for new operations.
 
-Default: "5mm"</string>
+Default: &quot;5mm&quot;</string>
              </property>
             </widget>
            </item>
@@ -1207,8 +1273,8 @@ Default: "5mm"</string>
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>561</width>
-         <height>675</height>
+         <width>559</width>
+         <height>685</height>
         </rect>
        </property>
        <attribute name="label">
@@ -1311,8 +1377,8 @@ Default: "5mm"</string>
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>151</width>
-         <height>119</height>
+         <width>123</width>
+         <height>108</height>
         </rect>
        </property>
        <attribute name="label">
@@ -1336,7 +1402,7 @@ Default: "5mm"</string>
             </widget>
            </item>
            <item row="0" column="1">
-            <widget class="Gui::QuantitySpinBox" name="setupRapidHorizontal">
+            <widget class="Gui::QuantitySpinBox" name="setupRapidHorizontal" native="true">
              <property name="sizePolicy">
               <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
                <horstretch>0</horstretch>
@@ -1356,7 +1422,7 @@ Default: "5mm"</string>
             </widget>
            </item>
            <item row="1" column="1">
-            <widget class="Gui::QuantitySpinBox" name="setupRapidVertical">
+            <widget class="Gui::QuantitySpinBox" name="setupRapidVertical" native="true">
              <property name="sizePolicy">
               <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
                <horstretch>0</horstretch>

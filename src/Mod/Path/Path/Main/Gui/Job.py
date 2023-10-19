@@ -25,6 +25,7 @@ from PySide import QtCore, QtGui
 from collections import Counter
 from contextlib import contextmanager
 from pivy import coin
+from pynest2d import *
 import FreeCAD
 import FreeCADGui
 import Path
@@ -600,6 +601,11 @@ class StockFromExistingEdit(StockEdit):
     def setupUi(self, obj):
         self.setFields(obj)
         self.form.stockExisting.currentIndexChanged.connect(lambda: self.getFields(obj))
+
+
+class MockObject(object):
+    def __init__(self, shape):
+        self.Shape = shape
 
 
 class TaskPanel:
@@ -1215,6 +1221,67 @@ class TaskPanel:
                     Draft.rotate(
                         sel.Object, angle, sel.Object.Shape.BoundBox.Center, axis
                     )
+        
+    """def modelNestObjectToFace(self, object):
+        area = Path.Area(Fill=2, Coplanar=0).add(object.Shape)
+        area.setPlane(PathUtils.makeWorkplane(Part.makeCircle(10)))
+        shape = area.makeSections(heights=[0.0], project=True)[0].getShape()
+        return MockObject(shape)"""
+        
+    def modelNestObjectToItem(self, object):
+        area = Path.Area(Fill=2, Coplanar=0).add(object.Shape)
+        area.setPlane(PathUtils.makeWorkplane(Part.makeCircle(10)))
+        shape = area.makeSections(heights=[0.0], project=True)[0].getShape()
+        return Item([Point(round(v.Point.x), round(v.Point.y)) for v in shape.Vertexes])
+    
+    def modelNest(self):
+        
+        """import sys
+        sys.path.append("/home/jffmichi/.eclipse/org.eclipse.platform_4.28.0_155965261_linux_gtk_x86_64/plugins/org.python.pydev.core_10.2.1.202307021217/pysrc")
+        import pydevd
+        pydevd.settrace()"""
+        
+        """container = self.modelNestObjectToFace(self.obj.Stock)
+        
+        objects = []
+        for obj in self.obj.Model.Group:
+            face = self.modelNestObjectToFace(obj)
+            objects.append((face, obj))
+        
+        import ArchNesting
+        nester = ArchNesting.Nester()
+        nester.addContainer(container)
+        nester.addObjects([face for face, obj in objects])
+        nester.run()
+        nester.show()
+        
+        result = nester.getPlacements()
+        for face, obj in objects:
+            p = result[face.Shape.hashCode()]
+            n = obj.Placement * p
+            obj.Placement = n"""
+        
+        container = Box(1000, 1000)
+        
+        objects = []
+        for model in self.obj.Model.Group:
+            item = self.modelNestObjectToItem(model)
+            item.inflation(3)
+            objects.append(item)
+        
+        num = nest(objects, container)
+        if num > 1:
+            Path.Log.error(
+                translate("Path_Job", "Couldn't place objects in stock")
+            )
+        
+        for model, obj in zip(self.obj.Model.Group, objects):
+            pos = FreeCAD.Vector(obj.translation().x(), obj.translation().y(), 0)
+            rot = FreeCAD.Rotation(FreeCAD.Vector(0, 0, 1), obj.rotation() * 180 / math.pi)
+            model.Placement = FreeCAD.Placement(pos, rot) * model.Placement
+            
+            print(obj.transformedShape().toString())
+            print(self.modelNestObjectToItem(model).toString())
 
     def alignSetOrigin(self):
         (obj, by) = self.alignMoveToOrigin()
@@ -1561,6 +1628,8 @@ class TaskPanel:
         self.form.modelRotateRight.clicked.connect(
             lambda: self.modelRotate(FreeCAD.Vector(0, 0, -1))
         )
+        
+        self.form.modelNest.clicked.connect(self.modelNest)
 
         self.updateSelection()
 
