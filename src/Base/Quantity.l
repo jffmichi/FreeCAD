@@ -219,6 +219,7 @@ CGRP     '\,'[0-9][0-9][0-9]
 
 "pi"            yylval = Quantity(std::numbers::pi);    return NUM; // constant pi
 "e"             yylval = Quantity(std::numbers::e);     return NUM; // constant e
+"inf"           yylval = Quantity(INFINITY);            return NUM; // constant inf
 
 "acos"                                                  return ACOS;
 "asin"                                                  return ASIN;

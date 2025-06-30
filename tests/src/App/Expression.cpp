@@ -122,6 +122,15 @@ TEST(Expression, tokenizeE)
     EXPECT_EQ(std::get<2>(result[0]), "e");
 }
 
+TEST(Expression, tokenizeInf)
+{
+    auto result = App::ExpressionParser::tokenize("inf");
+    EXPECT_EQ(result.size(), 1);
+    EXPECT_EQ(std::get<0>(result[0]), App::ExpressionParser::CONSTANT);
+    EXPECT_EQ(std::get<1>(result[0]), 0);
+    EXPECT_EQ(std::get<2>(result[0]), "inf");
+}
+
 TEST(Expression, tokenizeConstant)
 {
     auto result = App::ExpressionParser::tokenize("True False true false None");

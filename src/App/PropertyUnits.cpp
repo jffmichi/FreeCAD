@@ -38,7 +38,7 @@ using namespace std;
 
 
 const PropertyQuantityConstraint::Constraints LengthStandard = {
-    0.0, std::numeric_limits<double>::max(), 1.0};
+    0.0, std::numeric_limits<double>::infinity(), 1.0};
 const PropertyQuantityConstraint::Constraints AngleStandard = {-360, 360, 1.0};
 
 //**************************************************************************

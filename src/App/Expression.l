@@ -343,6 +343,7 @@ EXPO    [eE][-+]?[0-9]+
 
 "pi"                         COUNTCHARS; yylval.constant.fvalue = std::numbers::pi; yylval.constant.name = "pi"; return CONSTANT; // constant pi
 "e"                          COUNTCHARS; yylval.constant.fvalue = std::numbers::e; yylval.constant.name = "e"; return CONSTANT; // constant e
+"inf"                        COUNTCHARS; yylval.constant.fvalue = INFINITY; yylval.constant.name = "inf"; return CONSTANT; // constant inf
 
 "None"                       COUNTCHARS; yylval.constant.fvalue = 0; yylval.constant.name = "None"; return CONSTANT;
 "True"                       COUNTCHARS; yylval.constant.fvalue = 1; yylval.constant.name = "True"; return CONSTANT;

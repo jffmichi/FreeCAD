@@ -2,6 +2,7 @@
 #include <Base/Exception.h>
 #include <Base/Quantity.h>
 #include <QLocale>
+#include <numbers>
 
 using Base::ParserError;
 using Base::Quantity;
@@ -181,6 +182,21 @@ TEST(BaseQuantity, TestPow)
     EXPECT_EQ(q1.pow(q3), Quantity {1});
     EXPECT_EQ(q1.pow(v2), Quantity(v4, Unit::Area));
     EXPECT_THROW(q1.pow(q2), UnitsMismatchError);
+}
+
+TEST(BaseQuantity, TestConstant)
+{
+    const Quantity q1 = Quantity::parse("pi");
+    constexpr auto val1 {std::numbers::pi};
+    EXPECT_EQ(q1, Quantity(val1));
+
+    const Quantity q2 = Quantity::parse("e");
+    constexpr auto val2 {std::numbers::e};
+    EXPECT_EQ(q2, Quantity(val2));
+
+    const Quantity q3 = Quantity::parse("inf");
+    constexpr auto val3 {INFINITY};
+    EXPECT_EQ(q3, Quantity(val3));
 }
 
 class BaseQuantityLoc: public ::testing::Test

@@ -63,16 +63,16 @@ namespace Gui {
 class QuantitySpinBoxPrivate
 {
 public:
-    QuantitySpinBoxPrivate(QuantitySpinBox *q) :
-      validInput(true),
-      pendingEmit(false),
-      normalize(true),
-      checkRangeInExpression(false),
-      unitValue(0),
-      maximum(std::numeric_limits<double>::max()),
-      minimum(-std::numeric_limits<double>::max()),
-      singleStep(1.0),
-      q_ptr(q)
+    QuantitySpinBoxPrivate(QuantitySpinBox* q)
+        : validInput(true)
+        , pendingEmit(false)
+        , normalize(true)
+        , checkRangeInExpression(false)
+        , unitValue(0)
+        , maximum(std::numeric_limits<double>::infinity())
+        , minimum(-std::numeric_limits<double>::infinity())
+        , singleStep(1.0)
+        , q_ptr(q)
     {
     }
     ~QuantitySpinBoxPrivate() = default;
@@ -188,7 +188,7 @@ public:
             //Reused regex patterns
             static const std::string regexUnits = "sAV|VC|lim|nim|im|hpm|[mf]?bl|°|ged|dar|nog|″|′|rroT[uµm]?|K[uµm]?|A[mkM]?|F[pnuµm]?|C|S[uµmkM]?|zH[kMGT]?|H[nuµm]?|mhO[kM]?|J[mk]?|Ve[kM]?|V[mk]?|hWk|sW|lack?|N[mkM]?|g[uµmk]?|lm?|(?<=\\b|[^a-zA-Z])m[nuµmcdk]?|uoht|ni|\"|'|dy|dc|bW|T|t|zo|ts|twc|Wk?|aP[kMG]?|is[pk]|h|G|M|tfc|tfqs|tf|s";
             static const std::string regexUnitlessFunctions = "soca|nisa|2nata|nata|hsoc|hnis|hnat|soc|nat|nis|pxe|gol|01gol";
-            static const std::string regexConstants = "e|ip|lomm|lom";
+            static const std::string regexConstants = "e|ip|lomm|lom|fni";
             static const std::string regexNumber = "\\d+\\s*\\.?\\s*\\d*|\\.\\s*\\d+";
 
             // If expression does not contain /*() or ^, this regex will not find anything
