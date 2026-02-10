@@ -53,6 +53,7 @@
 #endif
 
 #include <cassert>
+#include <iostream>
 
 #if HAVE_CONFIG_H
 # include <config.h>
@@ -74,6 +75,7 @@
 #include <QPaintEvent>
 #include <QResizeEvent>
 #include <QWindow>
+#include <QOpenGLContext>
 
 #include <Inventor/C/basic.h>
 #include <Inventor/SbByteBuffer.h>
@@ -188,6 +190,15 @@ public:
                 logger->startLogging(QOpenGLDebugLogger::SynchronousLogging);
         }
 #endif
+
+        std::cerr << "quarter version: " << glGetString(GL_VERSION) << std::endl;
+        std::cerr << "quarter glsl: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
+
+        std::cerr << "quarter extensions:";
+        for (const auto& e : context()->extensions()) {
+            std::cerr << " " << e.toStdString();
+        }
+        std::cerr << std::endl;
 
         connect(this, &CustomGLWidget::resized, this, &CustomGLWidget::slotResized);
     }

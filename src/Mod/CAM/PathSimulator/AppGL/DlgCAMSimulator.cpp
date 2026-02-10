@@ -358,6 +358,15 @@ void DlgCAMSimulator::updateWindowScale()
 void DlgCAMSimulator::initializeGL()
 {
     initializeOpenGLFunctions();
+
+    std::cerr << "simulator version: " << glGetString(GL_VERSION) << std::endl;
+    std::cerr << "simulator glsl: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
+
+    std::cerr << "simulator extensions:";
+    for (const auto& e : context()->extensions()) {
+        std::cerr << " " << e.toStdString();
+    }
+    std::cerr << std::endl;
 }
 
 void DlgCAMSimulator::paintGL()
