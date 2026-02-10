@@ -374,6 +374,10 @@ void Shape::Render(const mat4x4& modelMat, const mat4x4& normallMat)  // normals
 
 void Shape::FreeResources()
 {
+    if (!vbo && !ibo && !vao) {
+        return;
+    }
+
     glBindVertexArray(0);
     GLDELETE_BUFFER(vbo);
     GLDELETE_BUFFER(ibo);
