@@ -152,6 +152,7 @@ void SimDisplay::CreateDisplayFbos()
 
     unsigned int attachments[3] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2};
     glDrawBuffers(3, attachments);
+    GLLogError();
 
     glGenRenderbuffers(1, &mRboDepthStencil);
     glBindRenderbuffer(GL_RENDERBUFFER, mRboDepthStencil);
@@ -400,6 +401,7 @@ void SimDisplay::RenderResultStandard()
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glDrawArrays(GL_TRIANGLES, 0, 6);
+    GLLogError();
 }
 
 void SimDisplay::RenderResultSSAO(bool recalculate)
@@ -425,6 +427,7 @@ void SimDisplay::RenderResultSSAO(bool recalculate)
         glBindTexture(GL_TEXTURE_2D, mFboNormTexture);
         glBindVertexArray(mFboQuadVAO);
         glDrawArrays(GL_TRIANGLES, 0, 6);
+        GLLogError();
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
         // blur SSAO texture to remove noise
@@ -437,6 +440,7 @@ void SimDisplay::RenderResultSSAO(bool recalculate)
         shaderSSAOBlur.UpdateScreenDimension(mWidth, mHeight);
         glBindVertexArray(mFboQuadVAO);
         glDrawArrays(GL_TRIANGLES, 0, 6);
+        GLLogError();
     }
 
     // lighting pass:
@@ -459,6 +463,7 @@ void SimDisplay::RenderResultSSAO(bool recalculate)
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glBindVertexArray(mFboQuadVAO);
     glDrawArrays(GL_TRIANGLES, 0, 6);
+    GLLogError();
 }
 
 void SimDisplay::SetupLinePathPass(int curSegment, bool isHidden)

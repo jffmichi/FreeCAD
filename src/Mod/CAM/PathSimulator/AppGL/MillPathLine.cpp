@@ -66,6 +66,7 @@ void MillPathLine::Render()
 {
     glBindVertexArray(mVao);
     glDrawArrays(GL_LINE_STRIP, 0, mNumVerts);
+    GLLogError();
 }
 
 }  // namespace MillSim

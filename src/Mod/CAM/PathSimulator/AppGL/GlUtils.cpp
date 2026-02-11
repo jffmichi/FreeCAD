@@ -40,7 +40,7 @@ bool GLLogError()
 {
     bool isError = false;
     while (GLenum err = glGetError()) {
-        std::cout << "[Opengl Error] (" << err << ")" << std::endl;
+        std::cerr << "[Opengl Error] (" << err << ")" << std::endl;
         isError = true;
     }
     return isError;

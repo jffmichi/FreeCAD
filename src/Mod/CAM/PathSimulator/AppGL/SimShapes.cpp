@@ -364,6 +364,7 @@ void Shape::Render()
     glBindVertexArray(vao);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
     glDrawElements(GL_TRIANGLES, numIndices, GL_UNSIGNED_SHORT, nullptr);
+    GLLogError();
 }
 
 void Shape::Render(const mat4x4& modelMat, const mat4x4& normallMat)  // normals are rotated only

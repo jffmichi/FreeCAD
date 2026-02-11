@@ -57,6 +57,7 @@ DlgCAMSimulator::DlgCAMSimulator(ViewCAMSimulator& view, QWidget* parent)
     viewCAMSimulator = &view;
 
     QSurfaceFormat format = QSurfaceFormat::defaultFormat();
+    format.setOptions(QSurfaceFormat::DebugContext);
     format.setDepthBufferSize(24);
     format.setStencilBufferSize(8);
     setFormat(format);
