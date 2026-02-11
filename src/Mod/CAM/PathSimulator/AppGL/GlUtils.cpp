@@ -23,6 +23,7 @@
  ***************************************************************************/
 
 #include "GlUtils.h"
+#include "OpenGlWrapper.h"
 #include <iostream>
 
 namespace MillSim
@@ -36,13 +37,18 @@ void GLClearError()
         ;
 }
 
-bool GLLogError()
+bool GLLogError(const char* file, int line)
 {
     bool isError = false;
+
     while (GLenum err = glGetError()) {
+        if (!isError) {
+            std::cerr << "file: " << file << " (line: " << line << ")" << std::endl;
+        }
         std::cerr << "[Opengl Error] (" << err << ")" << std::endl;
         isError = true;
     }
+
     return isError;
 }
 

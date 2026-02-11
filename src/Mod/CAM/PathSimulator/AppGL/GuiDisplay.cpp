@@ -294,7 +294,6 @@ void GuiDisplay::RenderItem(int itemId)
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIbo);
     int nTriangles = (item->flags & GUIITEM_STRETCHED) == 0 ? 6 : 18;
     glDrawElements(GL_TRIANGLES, nTriangles, GL_UNSIGNED_SHORT, nullptr);
-    GLLogError();
 }
 
 void GuiDisplay::SetupTooltips()

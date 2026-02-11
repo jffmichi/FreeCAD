@@ -25,7 +25,6 @@
 #ifndef __glutils_h__
 #define __glutils_h__
 
-#include "OpenGlWrapper.h"
 #include "linmath.h"
 
 constexpr auto EPSILON = 0.00001f;
@@ -38,13 +37,28 @@ constexpr auto EPSILON = 0.00001f;
 #define MS_KBD_CONTROL 0x10
 #define MS_KBD_ALT 0x20
 
-#define GL(x) \
-    { \
-        GLClearError(); \
-        x; \
-        if (GLLogError()) \
-            __debugbreak(); \
+template<class FN>
+class ScopeGuard
+{
+public:
+    ScopeGuard(FN&& fn)
+        : fn_(fn)
+    {}
+
+    ~ScopeGuard()
+    {
+        fn_();
     }
+
+    FN fn_;
+};
+
+#define GL(...) \
+    [&] { \
+        ::MillSim::GLClearError(); \
+        ScopeGuard _([] { ::MillSim::GLLogError(__FILE__, __LINE__); }); \
+        return __VA_ARGS__; \
+    }()
 
 #define GLDELETE(type, x) \
     { \
@@ -65,7 +79,7 @@ namespace MillSim
 extern const mat4x4 identityMat;
 
 void GLClearError();
-bool GLLogError();
+bool GLLogError(const char* file, int line);
 
 }  // namespace MillSim
 

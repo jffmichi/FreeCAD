@@ -333,9 +333,7 @@ void Shape::GenerateModel(const float* vbuffer, const GLushort* ibuffer, int num
 
     // vertex buffer
     glGenBuffers(1, &vbo);
-    GLClearError();
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    GLLogError();
     glBufferData(GL_ARRAY_BUFFER, numVerts * sizeof(Vertex), vbuffer, GL_STATIC_DRAW);
 
     // index buffer
@@ -364,7 +362,6 @@ void Shape::Render()
     glBindVertexArray(vao);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
     glDrawElements(GL_TRIANGLES, numIndices, GL_UNSIGNED_SHORT, nullptr);
-    GLLogError();
 }
 
 void Shape::Render(const mat4x4& modelMat, const mat4x4& normallMat)  // normals are rotated only
