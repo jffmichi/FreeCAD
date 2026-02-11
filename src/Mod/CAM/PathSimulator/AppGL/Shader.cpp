@@ -585,7 +585,7 @@ const char* VertShader3DLine = R"(
     #version 120
 
     attribute vec3 aPosition;
-    attribute int aIndex;
+    attribute float aIndex;
     varying float Index;
 
     uniform mat4 view;

@@ -39,10 +39,11 @@ void MillPathLine::GenerateModel()
         (void*)offsetof(MillPathPosition, X)
     );
     glEnableVertexAttribArray(1);
-    glVertexAttribIPointer(
+    glVertexAttribPointer(
         1,
         1,
         GL_INT,
+        GL_FALSE,
         sizeof(MillPathPosition),
         (void*)offsetof(MillPathPosition, SegmentId)
     );
