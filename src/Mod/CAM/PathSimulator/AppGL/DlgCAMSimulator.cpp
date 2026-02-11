@@ -56,19 +56,10 @@ DlgCAMSimulator::DlgCAMSimulator(ViewCAMSimulator& view, QWidget* parent)
 
     viewCAMSimulator = &view;
 
-#if 0
-    QSurfaceFormat format;
-    format.setVersion(4, 1);                         // Request OpenGL 4.1 - for MacOS
-    format.setProfile(QSurfaceFormat::CoreProfile);  // Use the core profile = for MacOS
-    int samples = Gui::View3DInventorViewer::getNumSamples();
-    if (samples > 1) {
-        format.setSamples(samples);
-    }
-    format.setSwapInterval(2);
+    QSurfaceFormat format = QSurfaceFormat::defaultFormat();
     format.setDepthBufferSize(24);
     format.setStencilBufferSize(8);
     setFormat(format);
-#endif
 
     setMouseTracking(true);
 
@@ -362,11 +353,13 @@ void DlgCAMSimulator::initializeGL()
     std::cerr << "simulator version: " << glGetString(GL_VERSION) << std::endl;
     std::cerr << "simulator glsl: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
 
+#if 0
     std::cerr << "simulator extensions:";
     for (const auto& e : context()->extensions()) {
         std::cerr << " " << e.toStdString();
     }
     std::cerr << std::endl;
+#endif
 }
 
 void DlgCAMSimulator::paintGL()

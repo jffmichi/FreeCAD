@@ -434,6 +434,7 @@ void SimDisplay::RenderResultSSAO(bool recalculate)
         shaderSSAOBlur.UpdateSsaoTexSlot(0);
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, mFboSsaoTexture);
+        shaderSSAOBlur.UpdateScreenDimension(mWidth, mHeight);
         glBindVertexArray(mFboQuadVAO);
         glDrawArrays(GL_TRIANGLES, 0, 6);
     }

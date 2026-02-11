@@ -466,6 +466,10 @@ int GuiDisplay::height() const
 
 void GuiDisplay::Render(float progress)
 {
+    if (!guiInitiated) {
+        return;
+    }
+
     if (mPressedItem == nullptr || mPressedItem->name != eGuiItemThumb) {
         mItems[eGuiItemThumb].setPosx((int)(mThumbMaxMotion * progress) + mThumbStartX);
     }

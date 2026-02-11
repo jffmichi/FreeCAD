@@ -194,11 +194,13 @@ public:
         std::cerr << "quarter version: " << glGetString(GL_VERSION) << std::endl;
         std::cerr << "quarter glsl: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
 
+#if 0
         std::cerr << "quarter extensions:";
         for (const auto& e : context()->extensions()) {
             std::cerr << " " << e.toStdString();
         }
         std::cerr << std::endl;
+#endif
 
         connect(this, &CustomGLWidget::resized, this, &CustomGLWidget::slotResized);
     }

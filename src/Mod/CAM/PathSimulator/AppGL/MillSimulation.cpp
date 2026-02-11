@@ -402,11 +402,9 @@ void MillSimulation::Render()
            p->render(mDebug);
        }*/
 
-#if 0
     float progress = (float)mCurStep / mNTotalSteps;
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     guiDisplay.Render(progress);
-#endif
 }
 
 void MillSimulation::ProcessSim(unsigned int time_ms)
