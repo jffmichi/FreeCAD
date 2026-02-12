@@ -143,16 +143,13 @@ bool GuiDisplay::GenerateGlItem(GuiItem* guiItem)
     glBindBuffer(GL_ARRAY_BUFFER, guiItem->vbo);
     glBufferData(GL_ARRAY_BUFFER, 4 * sizeof(Vertex2D), verts, GL_STATIC_DRAW);
 
-    // glDrawElements(GL_TRIANGLES, numIndices, GL_UNSIGNED_SHORT, nullptr);
-    //  vertex array
-    glGenVertexArrays(1, &(guiItem->vao));
-    glBindVertexArray(guiItem->vao);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex2D), (void*)offsetof(Vertex2D, x));
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex2D), (void*)offsetof(Vertex2D, tx));
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIbo);
-    glBindVertexArray(0);
+    // vertex array
+    guiItem->vao = [] {
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex2D), (void*)offsetof(Vertex2D, x));
+        glEnableVertexAttribArray(1);
+        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex2D), (void*)offsetof(Vertex2D, tx));
+    };
 
     return true;
 }
@@ -197,14 +194,13 @@ bool GuiDisplay::HStretchGlItem(GuiItem* guiItem, float newWidth, float edgeWidt
     glBindBuffer(GL_ARRAY_BUFFER, guiItem->vbo);
     glBufferData(GL_ARRAY_BUFFER, 12 * sizeof(Vertex2D), verts, GL_STATIC_DRAW);
 
-    glGenVertexArrays(1, &(guiItem->vao));
-    glBindVertexArray(guiItem->vao);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex2D), (void*)offsetof(Vertex2D, x));
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex2D), (void*)offsetof(Vertex2D, tx));
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIbo);
-    glBindVertexArray(0);
+    // vertex array
+    guiItem->vao = [] {
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex2D), (void*)offsetof(Vertex2D, x));
+        glEnableVertexAttribArray(1);
+        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex2D), (void*)offsetof(Vertex2D, tx));
+    };
 
     return true;
 }
@@ -212,7 +208,6 @@ bool GuiDisplay::HStretchGlItem(GuiItem* guiItem, float newWidth, float edgeWidt
 void GuiDisplay::DestroyGlItem(GuiItem* guiItem)
 {
     GLDELETE_BUFFER((guiItem->vbo));
-    GLDELETE_VERTEXARRAY((guiItem->vao));
 }
 
 bool GuiDisplay::InitGui()
@@ -271,6 +266,7 @@ void GuiDisplay::RenderItem(int itemId)
     if (item->hidden) {
         return;
     }
+
     mat4x4 model;
     mat4x4_translate(model, (float)item->posx(), (float)item->posy(), 0);
     mShader.UpdateModelMat(model, {});
@@ -290,7 +286,8 @@ void GuiDisplay::RenderItem(int itemId)
         mShader.UpdateObjColor(mStdColor);
     }
 
-    glBindVertexArray(item->vao);
+    glBindBuffer(GL_ARRAY_BUFFER, item->vbo);
+    item->vao();
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIbo);
     int nTriangles = (item->flags & GUIITEM_STRETCHED) == 0 ? 6 : 18;
     glDrawElements(GL_TRIANGLES, nTriangles, GL_UNSIGNED_SHORT, nullptr);

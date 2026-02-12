@@ -91,15 +91,16 @@ void SimDisplay::CreateFboQuad()
                             1.0f,  -1.0f, 1.0f, 0.0f, 1.0f,  1.0f,  1.0f, 1.0f
     };
 
-    glGenVertexArrays(1, &mFboQuadVAO);
     glGenBuffers(1, &mFboQuadVBO);
-    glBindVertexArray(mFboQuadVAO);
     glBindBuffer(GL_ARRAY_BUFFER, mFboQuadVBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices[0], GL_STATIC_DRAW);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+
+    mFboQuadVAO = [] {
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+        glEnableVertexAttribArray(1);
+        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+    };
 }
 
 void SimDisplay::CreateGBufTex(GLenum texUnit, GLint intFormat, GLenum format, GLenum type, GLuint& texid)
@@ -276,7 +277,6 @@ void SimDisplay::CleanGL()
     CleanFbos();
 
     // cleanup geometry
-    GLDELETE_VERTEXARRAY(mFboQuadVAO);
     GLDELETE_BUFFER(mFboQuadVBO);
 
     // cleanup shaders
@@ -377,6 +377,10 @@ void SimDisplay::RenderResult(bool recalculate, bool ssao)
 
 void SimDisplay::RenderResultStandard()
 {
+    if (!mFboQuadVBO) {
+        return;
+    }
+
     // set default frame buffer
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
@@ -387,7 +391,8 @@ void SimDisplay::RenderResultStandard()
     shaderSSAOLighting.UpdateNormalTexSlot(2);
     shaderSSAOLighting.UpdateSsaoActive(false);
     // shaderSimFbo.Activate();
-    glBindVertexArray(mFboQuadVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, mFboQuadVBO);
+    mFboQuadVAO();
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_CULL_FACE);
     glActiveTexture(GL_TEXTURE0);
@@ -403,6 +408,10 @@ void SimDisplay::RenderResultStandard()
 
 void SimDisplay::RenderResultSSAO(bool recalculate)
 {
+    if (!mFboQuadVBO) {
+        return;
+    }
+
     glDisable(GL_BLEND);
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_CULL_FACE);
@@ -422,7 +431,8 @@ void SimDisplay::RenderResultSSAO(bool recalculate)
         glBindTexture(GL_TEXTURE_2D, mFboPosTexture);
         glActiveTexture(GL_TEXTURE2);
         glBindTexture(GL_TEXTURE_2D, mFboNormTexture);
-        glBindVertexArray(mFboQuadVAO);
+        glBindBuffer(GL_ARRAY_BUFFER, mFboQuadVBO);
+        mFboQuadVAO();
         glDrawArrays(GL_TRIANGLES, 0, 6);
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
@@ -434,7 +444,8 @@ void SimDisplay::RenderResultSSAO(bool recalculate)
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, mFboSsaoTexture);
         shaderSSAOBlur.UpdateScreenDimension(mWidth, mHeight);
-        glBindVertexArray(mFboQuadVAO);
+        glBindBuffer(GL_ARRAY_BUFFER, mFboQuadVBO);
+        mFboQuadVAO();
         glDrawArrays(GL_TRIANGLES, 0, 6);
     }
 
@@ -456,7 +467,8 @@ void SimDisplay::RenderResultSSAO(bool recalculate)
     glBindTexture(GL_TEXTURE_2D, mFboSsaoBlurTexture);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glBindVertexArray(mFboQuadVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, mFboQuadVBO);
+    mFboQuadVAO();
     glDrawArrays(GL_TRIANGLES, 0, 6);
 }
 

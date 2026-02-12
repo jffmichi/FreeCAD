@@ -76,7 +76,7 @@ public:
     ~Shape();
 
 public:
-    uint vao = 0;
+    std::function<void()> vao;
     uint vbo = 0;
     uint ibo = 0;
     int numIndices = 0;

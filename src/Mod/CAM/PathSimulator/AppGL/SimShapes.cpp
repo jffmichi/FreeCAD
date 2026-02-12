@@ -342,12 +342,12 @@ void Shape::GenerateModel(const float* vbuffer, const GLushort* ibuffer, int num
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, nIndices * sizeof(GLushort), ibuffer, GL_STATIC_DRAW);
 
     // vertex array
-    glGenVertexArrays(1, &vao);
-    glBindVertexArray(vao);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, x));
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, nx));
+    vao = [] {
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, x));
+        glEnableVertexAttribArray(1);
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, nx));
+    };
 
     numIndices = nIndices;
 }
@@ -359,7 +359,8 @@ void Shape::SetModelData(const std::vector<Vertex>& vbuffer, const std::vector<G
 
 void Shape::Render()
 {
-    glBindVertexArray(vao);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    vao();
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
     glDrawElements(GL_TRIANGLES, numIndices, GL_UNSIGNED_SHORT, nullptr);
 }
@@ -379,7 +380,6 @@ void Shape::FreeResources()
     glBindVertexArray(0);
     GLDELETE_BUFFER(vbo);
     GLDELETE_BUFFER(ibo);
-    GLDELETE_VERTEXARRAY(vao);
 }
 
 Shape::~Shape()

@@ -61,7 +61,8 @@ enum eGuiItems
 struct DefaultGuiItem
 {
     eGuiItems name;
-    unsigned int vbo, vao;
+    unsigned int vbo = 0;
+    std::function<void()> vao;
     int sx, sy;      // screen location
     int actionKey;   // action key when item pressed
     bool hidden {};  // is item hidden

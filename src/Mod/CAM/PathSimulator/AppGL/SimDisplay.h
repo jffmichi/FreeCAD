@@ -128,7 +128,8 @@ protected:
     unsigned int mFboPosTexture = 0;
     unsigned int mFboNormTexture = 0;
     unsigned int mRboDepthStencil = 0;
-    unsigned int mFboQuadVAO = 0, mFboQuadVBO = 0;
+    unsigned int mFboQuadVBO;
+    std::function<void()> mFboQuadVAO;
 
     // ssao frame buffers
     bool mSsaoValid = false;
