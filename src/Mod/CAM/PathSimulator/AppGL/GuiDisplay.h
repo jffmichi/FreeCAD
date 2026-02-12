@@ -62,7 +62,6 @@ struct DefaultGuiItem
 {
     eGuiItems name;
     unsigned int vbo = 0;
-    std::function<void()> vao;
     int sx, sy;      // screen location
     int actionKey;   // action key when item pressed
     bool hidden {};  // is item hidden
@@ -128,6 +127,7 @@ private:
     void UpdateProjection();
     bool GenerateGlItem(GuiItem* guiItem);
     bool HStretchGlItem(GuiItem* guiItem, float newWidth, float edgeWidth);
+    void SetupVertexAttribs(GuiItem* guiItem);
     void DestroyGlItem(GuiItem* guiItem);
     void RenderItem(int itemId);
     void SetupTooltips();

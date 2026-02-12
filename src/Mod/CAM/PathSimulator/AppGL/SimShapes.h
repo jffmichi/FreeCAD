@@ -76,7 +76,6 @@ public:
     ~Shape();
 
 public:
-    std::function<void()> vao;
     uint vbo = 0;
     uint ibo = 0;
     int numIndices = 0;
@@ -121,6 +120,7 @@ public:
 
 protected:
     void GenerateModel(const float* vbuffer, const GLushort* ibuffer, int numVerts, int numIndices);
+    void SetupVertexAttribs();
     void CalculateExtrudeBufferSizes(
         int nProfilePoints,
         bool capStart,

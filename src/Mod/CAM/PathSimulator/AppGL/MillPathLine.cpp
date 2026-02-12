@@ -18,30 +18,32 @@ void MillPathLine::GenerateModel()
     glBindBuffer(GL_ARRAY_BUFFER, mVbo);
     glBufferData(GL_ARRAY_BUFFER, mNumVerts * sizeof(MillPathPosition), vbuffer, GL_STATIC_DRAW);
 
-    // vertex array
-    mVao = [] {
-        glEnableVertexAttribArray(0);
-        glVertexAttribPointer(
-            0,
-            3,
-            GL_FLOAT,
-            GL_FALSE,
-            sizeof(MillPathPosition),
-            (void*)offsetof(MillPathPosition, X)
-        );
-        glEnableVertexAttribArray(1);
-        glVertexAttribPointer(
-            1,
-            1,
-            GL_INT,
-            GL_FALSE,
-            sizeof(MillPathPosition),
-            (void*)offsetof(MillPathPosition, SegmentId)
-        );
-    };
-
     // free
     MillPathPointsBuffer.clear();
+}
+
+void MillPathLine::SetupVertexAttibs()
+{
+    glBindBuffer(GL_ARRAY_BUFFER, mVbo);
+
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(
+        0,
+        3,
+        GL_FLOAT,
+        GL_FALSE,
+        sizeof(MillPathPosition),
+        (void*)offsetof(MillPathPosition, X)
+    );
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(
+        1,
+        1,
+        GL_INT,
+        GL_FALSE,
+        sizeof(MillPathPosition),
+        (void*)offsetof(MillPathPosition, SegmentId)
+    );
 }
 
 void MillPathLine::Clear()
@@ -53,8 +55,7 @@ void MillPathLine::Clear()
 
 void MillPathLine::Render()
 {
-    glBindBuffer(GL_ARRAY_BUFFER, mVbo);
-    mVao();
+    SetupVertexAttibs();
     glDrawArrays(GL_LINE_STRIP, 0, mNumVerts);
 }
 

@@ -143,14 +143,6 @@ bool GuiDisplay::GenerateGlItem(GuiItem* guiItem)
     glBindBuffer(GL_ARRAY_BUFFER, guiItem->vbo);
     glBufferData(GL_ARRAY_BUFFER, 4 * sizeof(Vertex2D), verts, GL_STATIC_DRAW);
 
-    // vertex array
-    guiItem->vao = [] {
-        glEnableVertexAttribArray(0);
-        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex2D), (void*)offsetof(Vertex2D, x));
-        glEnableVertexAttribArray(1);
-        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex2D), (void*)offsetof(Vertex2D, tx));
-    };
-
     return true;
 }
 
@@ -194,15 +186,17 @@ bool GuiDisplay::HStretchGlItem(GuiItem* guiItem, float newWidth, float edgeWidt
     glBindBuffer(GL_ARRAY_BUFFER, guiItem->vbo);
     glBufferData(GL_ARRAY_BUFFER, 12 * sizeof(Vertex2D), verts, GL_STATIC_DRAW);
 
-    // vertex array
-    guiItem->vao = [] {
-        glEnableVertexAttribArray(0);
-        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex2D), (void*)offsetof(Vertex2D, x));
-        glEnableVertexAttribArray(1);
-        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex2D), (void*)offsetof(Vertex2D, tx));
-    };
-
     return true;
+}
+
+void GuiDisplay::SetupVertexAttribs(GuiItem* guiItem)
+{
+    glBindBuffer(GL_ARRAY_BUFFER, guiItem->vbo);
+
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex2D), (void*)offsetof(Vertex2D, x));
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex2D), (void*)offsetof(Vertex2D, tx));
 }
 
 void GuiDisplay::DestroyGlItem(GuiItem* guiItem)
@@ -286,8 +280,7 @@ void GuiDisplay::RenderItem(int itemId)
         mShader.UpdateObjColor(mStdColor);
     }
 
-    glBindBuffer(GL_ARRAY_BUFFER, item->vbo);
-    item->vao();
+    SetupVertexAttribs(item);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIbo);
     int nTriangles = (item->flags & GUIITEM_STRETCHED) == 0 ? 6 : 18;
     glDrawElements(GL_TRIANGLES, nTriangles, GL_UNSIGNED_SHORT, nullptr);

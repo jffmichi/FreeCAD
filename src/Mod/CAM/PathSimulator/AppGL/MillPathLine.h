@@ -4,7 +4,6 @@
 #define __millpathline_h__
 
 #include <vector>
-#include <functional>
 
 namespace MillSim
 {
@@ -19,6 +18,7 @@ class MillPathLine
 {
 public:
     void GenerateModel();
+    void SetupVertexAttibs();
     void Clear();
     void Render();
 
@@ -27,7 +27,6 @@ public:
 
 protected:
     unsigned int mVbo = 0;
-    std::function<void()> mVao;
     int mNumVerts;
 };
 
