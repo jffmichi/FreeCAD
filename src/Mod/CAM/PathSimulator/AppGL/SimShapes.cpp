@@ -377,7 +377,6 @@ void Shape::FreeResources()
         return;
     }
 
-    glBindVertexArray(0);
     GLDELETE_BUFFER(vbo);
     GLDELETE_BUFFER(ibo);
 }
