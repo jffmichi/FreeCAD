@@ -122,6 +122,8 @@ void MillSimulation::InitSimulation(float quality)
     mNPathSteps = (int)MillPathSegments.size();
     millPathLine.GenerateModel();
     InitDisplay(quality);
+
+    simulationInitiated = true;
 }
 
 EndMill* MillSimulation::GetTool(int toolId)
@@ -370,6 +372,10 @@ void MillSimulation::RenderBaseShape()
 
 void MillSimulation::Render()
 {
+    if (!simulationInitiated) {
+        return;
+    }
+
     // set background
     glClearColor(bgndColor[0], bgndColor[1], bgndColor[2], 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
