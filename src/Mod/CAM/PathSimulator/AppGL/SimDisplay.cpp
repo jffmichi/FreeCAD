@@ -370,7 +370,7 @@ void SimDisplay::ScaleViewToStock(StockObject* obj)
 
 void SimDisplay::RenderResult(bool recalculate, bool ssao)
 {
-    if (displayInitiated) {
+    if (!displayInitiated) {
         return;
     }
 

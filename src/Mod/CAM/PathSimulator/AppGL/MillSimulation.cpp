@@ -65,6 +65,8 @@ void MillSimulation::Clear()
     mCurStep = 0;
     mPathStep = -1;
     mNTotalSteps = 0;
+
+    simulationInitiated = false;
 }
 
 
