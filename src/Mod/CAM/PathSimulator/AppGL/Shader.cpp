@@ -33,6 +33,7 @@
 #include "GlUtils.h"
 #include "Shader.h"
 #include <iostream>
+#include <regex>
 #include <Base/Console.h>
 
 namespace MillSim
@@ -199,13 +200,51 @@ bool CheckCompileResult(int shaderId, const char* shaderName, bool isVertex)
     return true;
 }
 
+static void preprocessVertexShader(std::string& shader, std::map<int, std::string>& attributes)
+{
+    // The new CAM simulator relies on "layout(location = x)" to specify vertex attributes. However,
+    // on macOS we're limited to OpenGL 2.1 and GLSL 1.20 and layout specifiers are not supported.
+    // We use a regex to search those specifiers and extract the information manually. This can then
+    // be used with glBindAttribLocation to achieve the same result.
+
+    const std::regex attributeRegex {
+        "layout\\s*\\(\\s*location\\s*=\\s*(\\d+)\\s*\\)\\s*attribute\\s+(\\w+)\\s+(\\w+);"
+    };
+
+    for (int i = 0; i < (int)shader.size();) {
+        std::smatch match;
+        if (!std::regex_search(shader.cbegin() + i, shader.cend(), match, attributeRegex)) {
+            break;
+        }
+
+        const int location = std::stoi(match[1]);
+        const std::string type = match[2];
+        const std::string name = match[3];
+
+        attributes[location] = name;
+
+        const std::string prefix {shader.cbegin(), match.prefix().second};
+        const std::string suffix = match.suffix().str();
+
+        const std::string decl = "attribute " + type + " " + name + ";";
+
+        shader = prefix + decl + suffix;
+        i += decl.length();
+    }
+}
+
 unsigned int Shader::CompileShader(const char* name, const char* _vertShader, const char* _fragShader)
 {
     vertShader = _vertShader;
     fragShader = _fragShader;
+
+    std::map<int, std::string> attributes;
+    preprocessVertexShader(vertShader, attributes);
+
     const GLuint vertex_shader = glCreateShader(GL_VERTEX_SHADER);
     GLint res = 0;
-    glShaderSource(vertex_shader, 1, &vertShader, NULL);
+    const char* vertShaderData[] = {vertShader.c_str()};
+    glShaderSource(vertex_shader, 1, vertShaderData, NULL);
     glCompileShader(vertex_shader);
     if (CheckCompileResult(vertex_shader, name, true)) {
         glDeleteShader(vertex_shader);
@@ -213,7 +252,8 @@ unsigned int Shader::CompileShader(const char* name, const char* _vertShader, co
     }
 
     const GLuint fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragment_shader, 1, &fragShader, NULL);
+    const char* fragShaderData[] = {fragShader.c_str()};
+    glShaderSource(fragment_shader, 1, fragShaderData, NULL);
     glCompileShader(fragment_shader);
     if (CheckCompileResult(fragment_shader, name, false)) {
         glDeleteShader(fragment_shader);
@@ -224,6 +264,11 @@ unsigned int Shader::CompileShader(const char* name, const char* _vertShader, co
     shaderId = glCreateProgram();
     glAttachShader(shaderId, vertex_shader);
     glAttachShader(shaderId, fragment_shader);
+
+    for (auto [pos, name] : attributes) {
+        glBindAttribLocation(shaderId, pos, name.c_str());
+    }
+
     glLinkProgram(shaderId);
 
     glGetProgramiv(shaderId, GL_LINK_STATUS, &res);
@@ -281,8 +326,8 @@ void Shader::Destroy()
 const char* VertShader3DNorm = R"(
     #version 120
 
-    attribute vec3 aPosition;
-    attribute vec3 aNormal;
+    layout(location = 0) attribute vec3 aPosition;
+    layout(location = 1) attribute vec3 aNormal;
 
     varying vec3 Normal;
     varying vec3 Position;
@@ -304,8 +349,8 @@ const char* VertShader3DNorm = R"(
 const char* VertShader3DInvNorm = R"(
     #version 120
 
-    attribute vec3 aPosition;
-    attribute vec3 aNormal;
+    layout(location = 0) attribute vec3 aPosition;
+    layout(location = 1) attribute vec3 aNormal;
 
     varying vec3 Normal;
     varying vec3 Position;
@@ -327,8 +372,8 @@ const char* VertShader3DInvNorm = R"(
 const char* VertShader2DTex = R"(
     #version 120
 
-    attribute vec2 aPosition;
-    attribute vec2 aTexCoord;
+    layout(location = 0) attribute vec2 aPosition;
+    layout(location = 1) attribute vec2 aTexCoord;
 
     varying vec2 texCoord;
 
@@ -395,8 +440,8 @@ const char* FragShaderFlat = R"(
 const char* VertShader2DFbo = R"(
     #version 120
 
-    attribute vec2 aPosition;
-    attribute vec2 aTexCoord;
+    layout(location = 0) attribute vec2 aPosition;
+    layout(location = 1) attribute vec2 aTexCoord;
 
     varying vec2 texCoord;
 
@@ -424,8 +469,8 @@ const char* FragShader2dFbo = R"(
 const char* VertShaderGeom = R"(
     #version 120
 
-    attribute vec3 aPos;
-    attribute vec3 aNormal;
+    layout(location = 0) attribute vec3 aPosition;
+    layout(location = 1) attribute vec3 aNormal;
 
     varying vec3 Position;
     varying vec3 Normal;
@@ -438,7 +483,7 @@ const char* VertShaderGeom = R"(
 
     void main()
     {
-        vec4 viewPos = view * model * vec4(aPos, 1.0);
+        vec4 viewPos = view * model * vec4(aPosition, 1.0);
         Position = viewPos.xyz;
 
         mat3 normalMatrix = /* transpose(inverse( */ mat3(view * model) /* )) */;
@@ -584,8 +629,8 @@ const char* FragShaderSSAOLighting = R"(
 const char* VertShader3DLine = R"(
     #version 120
 
-    attribute vec3 aPosition;
-    attribute float aIndex;
+    layout(location = 0) attribute vec3 aPosition;
+    layout(location = 1) attribute float aIndex;
     varying float Index;
 
     uniform mat4 view;

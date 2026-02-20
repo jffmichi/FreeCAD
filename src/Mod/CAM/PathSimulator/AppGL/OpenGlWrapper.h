@@ -39,6 +39,8 @@
 #define glBindVertexArray(...) GL(gSimWindow->glBindVertexArray(__VA_ARGS__))
 #define glEnableVertexAttribArray(...) GL(gSimWindow->glEnableVertexAttribArray(__VA_ARGS__))
 #define glVertexAttribPointer(...) GL(gSimWindow->glVertexAttribPointer(__VA_ARGS__))
+#define glBindAttribLocation(...) GL(gSimWindow->glBindAttribLocation(__VA_ARGS__))
+#define glGetAttribLocation(...) GL(gSimWindow->glGetAttribLocation(__VA_ARGS__))
 #define glShaderSource(...) GL(gSimWindow->glShaderSource(__VA_ARGS__))
 #define glCompileShader(...) GL(gSimWindow->glCompileShader(__VA_ARGS__))
 #define glDeleteShader(...) GL(gSimWindow->glDeleteShader(__VA_ARGS__))
