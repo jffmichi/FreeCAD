@@ -124,6 +124,7 @@ class ObjectDressup:
                 (translate("CAM_DressupRampEntry", "RampMethod1"), "RampMethod1"),
                 (translate("CAM_DressupRampEntry", "RampMethod2"), "RampMethod2"),
                 (translate("CAM_DressupRampEntry", "RampMethod3"), "RampMethod3"),
+                (translate("CAM_DressupRampEntry", "RampMethod4"), "RampMethod4"),
             ],
         }
 
@@ -182,6 +183,11 @@ class ObjectDressup:
                 QT_TRANSLATE_NOOP("App::Property", "Calculate ramp angle from vertical plane"),
             )
             obj.RampVertical = True
+
+        # update enumeration
+        for n in self.propertyEnumerations():
+            if n[0] == "Method":
+                setattr(obj, n[0], n[1])
 
         self.setEditorProperties(obj)
 
