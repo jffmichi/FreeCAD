@@ -67,7 +67,9 @@ class ObjectDressup:
                 "\nRamp Method 2: Travel at start depth along the path"
                 " and Ramp backwards at rampangle along the path to the original plunge end point."
                 "\nRamp Method 3: Ramp down along the path until traveled half of the Z distance,"
-                " change direction and ramp backwards to the original plunge end point.",
+                " change direction and ramp backwards to the original plunge end point."
+                "\nRamp Method 4: Ramp down at rampangle along the path,"
+                " continue with the original path, extend and close the path on the final loop",
             ),
         )
         obj.addProperty(

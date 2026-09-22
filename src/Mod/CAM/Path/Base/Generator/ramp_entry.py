@@ -32,7 +32,7 @@ else:
 
 
 class RampEntry:
-    """
+    r"""
     Generator ramp enty
 
     Example of uses:
@@ -50,13 +50,13 @@ class RampEntry:
     - ignoreAbove: Helix ramp will start from this height (optional)
                    Upper path will stay without modifications
 
-              1 |                          2 |                              3 |
-         plunge |                     plunge |                         plunge |
-    start depth v                start depth v--->                start depth v
-               /                                 /                           /
-        ramp  /                           ramp  /                     ramp  /
-             /                                 /                            \
-            /--->                             /                       ramp   \
+              1 |                    2 |                        3 |                    4 |
+         plunge |               plunge |                   plunge |               plunge |
+    start depth v          start depth v--->          start depth v          start depth v
+               /                           /                     /                        \
+        ramp  /                     ramp  /               ramp  /                    ramp  \
+             /                           /                      \                           \
+            /--->                       /                 ramp   \                       --->\--->
 
     Ramp Method 0
     - Helix like path
@@ -127,7 +127,7 @@ class RampEntry:
                 self.tc.Proxy, Path.Tool.Controller.ToolController
             ):
                 raise TypeError("'tc' must be a tool controller object")
-            Path.Log.debug("tool controller: {}".format(self.tc.Name))
+            Path.Log.debug(f"tool controller: {self.tc.Name}")
             if not self.tc.HorizFeed.Value:
                 raise ValueError("'HorizFeed' is 0")
             if not self.tc.VertFeed.Value:
@@ -137,7 +137,7 @@ class RampEntry:
 
         if self.ignoreAbove is not None and not isinstance(self.ignoreAbove, (float, int)):
             raise TypeError("'ignoreAbove' must be a int or float")
-        Path.Log.debug("ignoreAboveZ: {}".format(self.ignoreAbove))
+        Path.Log.debug(f"ignoreAboveZ: {self.ignoreAbove}")
 
     def generate(self):
         self.edges = []
@@ -185,8 +185,7 @@ class RampEntry:
 
     def generateHelix(self):
         edges = self.edges
-        minZ = self.min_z
-        Path.Log.debug("Minimum Z in this path is {}".format(minZ))
+        Path.Log.debug(f"Minimum Z in this path is {self.min_z}")
         outedges = []
         i = 0
         while i < len(edges):
@@ -222,7 +221,7 @@ class RampEntry:
                         outedges.append(edge)
                     else:
                         outedges.extend(self.createHelix(rampedges, edge.start_point[2]))
-                        if not isRoughly(edge.end_point[2], minZ):
+                        if not isRoughly(edge.end_point[2], self.min_z):
                             # the edges covered by the helix not handled again,
                             # unless reached the bottom height
                             i = j - 1
